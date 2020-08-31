@@ -1,0 +1,12 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+# dependencies
+/node_modules
+
+/admin/node_modules
+/admin/.next
+
+/client/node_modules
+/client/.next
+
+/server/node_modules
+/server/.next
