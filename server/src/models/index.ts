@@ -2,21 +2,34 @@ import mysql from 'mysql'
 import getConnection from '../loaders/mysql'
 let connection:mysql.Connection = getConnection()
 
+// 异步回调函数Promise化
+let connectionPromise = (sql?:string,params?:any)=>{
+    return new Promise((resolve,reject)=>{
+        let newArgs:any = [sql,params]
+        newArgs.push((err:object, result:object)=>{
+            if(err){
+                reject(err)
+            }
+            else{
+                resolve(result)
+            }
+        })
+        connection.query.apply(connection.query,newArgs)
+    })
+}
+
 // 查询数据库
-async function findSome(sql:string){
+export async function findSome(sql:string){
     connection.connect();
 
-    connection.query(sql,function (err, result) {
-            if(err){
-                console.log('[SELECT ERROR] - ',err.message);
-                return;
-            }
-    });
-    
+    let result = await connectionPromise(sql,[])
+
     connection.end();
+
+    return result
 }
 // 插入数据库
-async function insert(sql:string,sqlParams:Array<any>){
+export async function insert(sql:string,sqlParams:Array<any>){
     connection.connect();
  
     var  addSql = 'INSERT INTO blog_user(id,user_name,PASSWORD,insert_time) VALUES(0,?,?,?)';
@@ -32,9 +45,4 @@ async function insert(sql:string,sqlParams:Array<any>){
     });
     
     connection.end();
-}
-
-export default {
-    findSome,
-    insert
 }

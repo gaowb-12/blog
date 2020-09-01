@@ -19,6 +19,8 @@
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1",
+    "tslib": "^2.0.1",
     "typedi": "^0.8.0",
     "url": "^0.11.0",
     "winston": "^3.3.3"
