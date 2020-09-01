@@ -1,6 +1,6 @@
 import  express  = require('express')
-let router:express.Router = express.Router()
-import AuthService from "../services/auth"
+let router:express.Router = express.Router();
+import * as AuthService from "../services/auth"
 
 // 注册
 router.post('/signup', AuthService.SignUp)
