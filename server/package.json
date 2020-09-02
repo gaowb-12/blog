@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cross-env NODE_ENV=dev nodemon --ext js,ts --exec 'ts-node src/main.ts'",
+    "start": "npm run dev",
     "build": "cross-env NODE_ENV=production node src/main.js"
   },
   "keywords": [],
@@ -20,7 +21,6 @@
     "express-jwt": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
-    "tslib": "^2.0.1",
     "typedi": "^0.8.0",
     "url": "^0.11.0",
     "winston": "^3.3.3"

@@ -1,48 +1,61 @@
 import mysql from 'mysql'
 import getConnection from '../loaders/mysql'
-let connection:mysql.Connection = getConnection()
 
-// 异步回调函数Promise化
-let connectionPromise = (sql?:string,params?:any)=>{
-    return new Promise((resolve,reject)=>{
-        let newArgs:any = [sql,params]
-        newArgs.push((err:object, result:object)=>{
+
+// 通过函数重载，将mysql的query方法，改造成promise异步
+function connectionPromise(sql:string | mysql.QueryOptions) :Promise<any>;
+function connectionPromise(sql:string | mysql.QueryOptions,values:any) :Promise<any>;
+function connectionPromise(sql:string | mysql.QueryOptions,values?:any) :Promise<any>{
+    let connection:mysql.Connection = getConnection();
+    connection.connect();
+    let result = new Promise<any>((resolve ,reject)=>{
+        let queryCallback:mysql.queryCallback = (err:mysql.MysqlError|null, results?: any, fields?: mysql.FieldInfo[]) => {
             if(err){
                 reject(err)
             }
-            else{
-                resolve(result)
-            }
-        })
-        connection.query.apply(connection.query,newArgs)
+            if(!results||results.length==0)
+                resolve(null)
+            else
+                resolve(results)
+        }
+        // 判断是否传入了第二个参数
+        if(!values) {
+            connection.query(sql,queryCallback)
+        }else{
+            connection.query(sql,values,queryCallback)
+        }
+        
     })
+    connection.end();
+    return result
 }
 
 // 查询数据库
-export async function findSome(sql:string){
-    connection.connect();
+export async function findSome(sql:string ,values?:any){
+    
+    let result
 
-    let result = await connectionPromise(sql,[])
-
-    connection.end();
-
+    try {
+        result = await connectionPromise(sql)
+    } catch (error) {
+        throw error
+    }
+    
+    
     return result
 }
+
 // 插入数据库
-export async function insert(sql:string,sqlParams:Array<any>){
-    connection.connect();
- 
-    var  addSql = 'INSERT INTO blog_user(id,user_name,PASSWORD,insert_time) VALUES(0,?,?,?)';
-    var  addSqlParams = ['gao', '123','23453'];
+export async function insert(sql:string,sqlParams?:any){
+    // var  addSql = 'INSERT INTO blog_user(id,user_name,PASSWORD,insert_time) VALUES(0,?,?,?)';
+    // var  addSqlParams = ['gao', '123','23453'];
     //增
-    await connection.query(sql,sqlParams,(err, result) => {
-            if(err){
-                console.log('[INSERT ERROR] - ',err.message);
-                return;
-            }        
-    
-        console.log('INSERT ID:',result);        
-    });
-    
-    connection.end();
+    let result
+    try {
+        result = await connectionPromise(sql,sqlParams)
+    } catch (error) {
+        throw error
+    }
+
+    return result
 }
