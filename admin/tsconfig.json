@@ -49,7 +49,8 @@
   // 读取所有可识别的src下面的文件
   "include": [
     "./src/**/*",
-    "pages"
+    "pages",
+    "*.ts"
   ],
   "exclude": [
     "node_modules"

@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node ./src/server.js",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
     "antd": "^4.6.1",
+    "http-proxy-middleware": "^1.0.5",
     "monaco-editor": "^0.20.0",
     "next": "9.3.5",
     "react": "16.13.1",
