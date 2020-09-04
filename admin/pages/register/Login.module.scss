@@ -1,0 +1,19 @@
+.main-container{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    // background: linear-gradient(to bottom right, #50a3a2, #53e3a6);
+    background: #E3F0FF;
+}
+.login-container{
+    width:520px;
+    margin: 0 auto;
+    position: relative;
+    top:224px;
+}
+.login-tip{
+    text-align:center;
+}
+.item{
+    margin-bottom: 20px;
+}

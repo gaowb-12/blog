@@ -1,6 +1,5 @@
 // server.js
 const express = require('express')
-const { parse } = require('url')
 const next = require('next')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
@@ -20,18 +19,15 @@ const handle = app.getRequestHandler()
 
 app.prepare()
 .then(() => {
-  
   const server = express();
 
   // 代理
   Object.keys(devProxy).forEach(function(context) {
     server.use(context,createProxyMiddleware(devProxy[context]))
   });
-    
 
   server.use((req, res) => {
-    const parsedUrl = parse(req.url, true)
-     return handle(req, res, parsedUrl)
+    return handle(req, res, null)
   });
 
   server.listen(3000, (err) => {
