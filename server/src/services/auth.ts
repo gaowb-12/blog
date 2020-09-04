@@ -5,6 +5,7 @@ import { findSome } from '../models'
 // 注册逻辑
 export async function SignUp(req:express.Request, res:express.Response){
     let user = req.body
+    
     // 1. 首先查询数据库是否已经有注册过
     let result = await findSome(`SELECT * FROM blog_user WHERE user_name='${user.name}'`)
     // 2. 查到结果提示注册过
@@ -24,6 +25,7 @@ export async function SignUp(req:express.Request, res:express.Response){
 // 登录逻辑
 export async function Login(req:express.Request, res:express.Response){
     let user = req.body
+    console.log(user)
     // 1. 查询是否存在当前用户
     let result = await findSome(`SELECT * FROM blog_user WHERE user_name='${user.name}'`)
     if(!result) res.status(800).json({errcode:800,message:"账号或密码错误！"})
