@@ -1,8 +1,18 @@
 // import App from 'next/app'
 import Head from 'next/head'
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
+import React, { useEffect } from 'react';
+import fetchProxyHandler from  "../src/fetchConfig"
 
 function MyApp({ Component, pageProps }:{Component: React.ComponentClass,pageProps:React.ComponentProps<any>}) {
+    useEffect(() => {
+
+        // 配置fetch请求拦截的代理
+        let fetchProxy = new Proxy(fetch,fetchProxyHandler);
+        window.fetch = fetchProxy
+
+    });
+
     return <div className="container">
                 <Head>
                     <title>Blog</title>
@@ -19,8 +29,9 @@ function MyApp({ Component, pageProps }:{Component: React.ComponentClass,pagePro
 // MyApp.getInitialProps = async (appContext) => {
 //   // calls page's `getInitialProps` and fills `appProps.pageProps`
 //   const appProps = await App.getInitialProps(appContext);
-//
+
 //   return { ...appProps }
 // }
+
   
 export default MyApp

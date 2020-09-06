@@ -1,14 +1,20 @@
 import qs from "qs"
-
+interface ObjectX{
+    [p:string]:any
+}
 export default {
     async login(o:any){
-        const res = await fetch('/api/login',{
+        const res:ObjectX = await fetch('/api/login',{
             method:"POST",
-            headers: {
-                'content-type': 'application/x-www-form-urlencoded'
-              },
             body:qs.stringify(o)
         })
-        return  res.json()
+        return  res
+    },
+    async register(o:any){
+        const res:ObjectX = await fetch('/api/signup',{
+            method:"POST",
+            body:qs.stringify(o)
+        })
+        return  res
     }
 }

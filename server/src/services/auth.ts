@@ -11,16 +11,16 @@ export async function SignUp(req:express.Request, res:express.Response){
     let result = await findSome(`SELECT * FROM blog_user WHERE user_name='${user.name}'`)
     // 2. 查到结果提示注册过
     if(result) 
-        res.status(801).json({body:null,errcode:801,message:"用户名已注册"})
+        res.status(801).json({body:null,errcode:801,message:"用户名已注册！"})
     // 3. 未查到结果直接注册
     else{
         let insert_time = +new Date()
         let hashPwd = getHash(user.password)
         let result = await findSome(`INSERT INTO blog_user(id,user_name,pwd,insert_time) VALUES(0,'${user.name}','${hashPwd}','${insert_time}')`)
         if(result)
-            res.status(200).json({body:null,errcode:200,message:"用户名注册成功"})
+            res.status(200).json({body:{username:user.name,insert_time:insert_time},errcode:200,message:"用户名注册成功！"})
         else
-            res.status(501).json({body:null,errcode:501,message:"用户名注册失败"})
+            res.status(501).json({body:null,errcode:501,message:"用户名注册失败，请重试！"})
     }
 }
 

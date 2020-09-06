@@ -1,49 +1,33 @@
 import Link from 'next/link'
-import React, { useState } from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
-import { UserOutlined ,KeyOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/router'
+import React from 'react';
+import { Form, Input, Button, message } from 'antd';
 import styles from "./Login.module.scss";
 import http_auth from "../../src/api/auth";
 
 const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+  labelCol: { span: 0 },
+  wrapperCol: { span: 24 },
 };
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: { offset: 0, span: 24 },
 };
 
-export default function Home() {
-  // 增加用户名 密码
-  let [name,setName] = useState("")
-  let [password,setPassword] = useState("")
-  let [vertifyPwd,setVertifyPwd] = useState("")
-
+export default function Register() {
+  const router = useRouter()
   // login逻辑
-  async function register(){
+  async function register(values:any){
     try {
-      let data = await http_auth.login({name,password})
-      // 本地存储token
-      localStorage.setItem("token",data.body.token)
-
+      let data = await http_auth.register({name:values.name,password:values.password})
+      message.success("注册成功，请登录！")
+      router.push("/login")
     } catch (error) {
       console.log(error)
     }
   }
-  // 用户名
-  function handleChange(event:any) {
-    setName(event.target.value);
-  }
-  // 密码
-  function handleChangepassword(event:any) {
-    setPassword(event.target.value);
-  }
-  // 确认密码
-  function vertifyPassword(event:any) {
-    setVertifyPwd(event.target.value);
-  }
+
   const onFinish = (values:string) => {
-    console.log('Success:', values);
+    register(values)
   };
 
   const onFinishFailed = (errorInfo:any) => {
@@ -61,24 +45,42 @@ export default function Home() {
             onFinishFailed={onFinishFailed}
           >
             <Form.Item
-              label="Username"
-              name="username"
-              rules={[{ required: true, message: 'Please input your username!' }]}
+              name="name"
+              rules={[{ required: true, message: '请输入用户名！' }]}
             >
-              <Input size="large" />
+              <Input size="large" placeholder="用户名" />
             </Form.Item>
 
             <Form.Item
-              label="Password"
               name="password"
-              rules={[{ required: true, message: 'Please input your password!' }]}
+              rules={[{ required: true, message: '请输入密码！' }]}
             >
-              <Input.Password size="large" />
+              <Input.Password size="large" placeholder="密码" />
+            </Form.Item>
+
+            <Form.Item
+              name="vertifyPwd"
+              rules={[
+                {
+                  required: true,
+                  message: '请确认密码!',
+                },
+                ({ getFieldValue }) => ({
+                  validator(rule, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject('两次输入的密码不匹配!');
+                  },
+                }),
+              ]}
+            >
+              <Input.Password size="large" placeholder="确认密码" />
             </Form.Item>
 
             <Form.Item {...tailLayout}>
-              <Button type="primary" size="large" htmlType="submit">
-                Submit
+              <Button type="primary" size="large" block htmlType="submit">
+                提交
               </Button>
             </Form.Item>
           </Form>

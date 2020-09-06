@@ -1,43 +1,73 @@
 import Link from 'next/link'
-import React, { useState } from 'react';
-import { Button ,Input  } from 'antd';
-import { UserOutlined ,KeyOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/router'
+import React from 'react';
+import { Form, Input, Button, message } from 'antd';
 import styles from "./Login.module.scss";
 import http_auth from "../../src/api/auth";
 
-export default function Home() {
-  // 增加用户名 密码
-  let [name,setName] = useState("test")
-  let [password,setPassword] = useState("123456")
+const layout = {
+  labelCol: { span: 0 },
+  wrapperCol: { span: 24 },
+};
+const tailLayout = {
+  wrapperCol: { offset: 0, span: 24 },
+};
 
+export default function Home() {
+  const router = useRouter()
   // login逻辑
-  async function login(){
+  async function login(values:any){
     try {
-      let data = await http_auth.login({name,password})
+      let data = await http_auth.login({name:values.name,password:values.password})
       // 本地存储token
-      localStorage.setItem("token",data.body.token)
+      localStorage.setItem("token",data.token)
+      router.push("/")
 
     } catch (error) {
       console.log(error)
     }
   }
-  // 用户名
-  function handleChange(event:any) {
-    setName(event.target.value);
-  }
-  // 密码
-  function handleChangepassword(event:any) {
-    setPassword(event.target.value);
-  }
+
+  const onFinish = (values:string) => {
+    login(values)
+  };
+
+  const onFinishFailed = (errorInfo:any) => {
+    console.log('Failed:', errorInfo);
+  };
   return (
       <main className={styles["main-container"]}>
         <div className={styles["login-container"]}>
           <h2 className={styles["login-tip"]}>系统登录</h2>
-          <Input size="large" placeholder="用户名" className={styles["item"]} value={name} onChange={handleChange} prefix={<UserOutlined />} />
-          <Input.Password size="large" placeholder="密码" className={styles["item"]} value={password} onChange={handleChangepassword} prefix={<KeyOutlined />} />
-          <Button type="primary" size="large" className={styles["item"]} block onClick={login}>登录</Button>
+          <Form
+            {...layout}
+            name="basic"
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+          >
+            <Form.Item
+              name="name"
+              rules={[{ required: true, message: '请输入用户名！' }]}
+            >
+              <Input size="large" placeholder="用户名" />
+            </Form.Item>
+
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: '请输入密码！' }]}
+            >
+              <Input.Password size="large" placeholder="密码" />
+            </Form.Item>
+
+            <Form.Item {...tailLayout}>
+              <Button type="primary" size="large" block htmlType="submit">
+                登录
+              </Button>
+            </Form.Item>
+          </Form>
           <Link href="/register">
-            <a>用户注册</a>
+            <a>去注册</a>
           </Link>
         </div>
       </main>
