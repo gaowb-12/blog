@@ -20,6 +20,7 @@ export default function Home() {
     try {
       let data = await http_auth.login({name:values.name,password:values.password})
       // 本地存储token
+      localStorage.setItem("user",JSON.stringify({username:data.username}))
       localStorage.setItem("token",data.token)
       router.push("/")
 

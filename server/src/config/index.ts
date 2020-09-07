@@ -7,7 +7,7 @@ export default {
   /**
    * Your favorite port
    */
-  port: 5502,
+  port: 5501,
 
   /**
    * Your logs

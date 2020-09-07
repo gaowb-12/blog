@@ -1,7 +1,7 @@
-// import App from 'next/app'
+import React, { useEffect } from 'react';
 import Head from 'next/head'
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
-import React, { useEffect } from 'react';
+
 import fetchProxyHandler from  "../src/fetchConfig"
 
 function MyApp({ Component, pageProps }:{Component: React.ComponentClass,pageProps:React.ComponentProps<any>}) {
@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps }:{Component: React.ComponentClass,pagePro
         window.fetch = fetchProxy
 
     });
-
+    console.dir(Component)
     return <div className="container">
                 <Head>
                     <title>Blog</title>

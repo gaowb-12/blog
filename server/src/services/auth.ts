@@ -37,7 +37,7 @@ export async function Login(req:express.Request, res:express.Response){
         let hashPwd = getHash(user.password)
         if(hashPwd == result[0].pwd){
             let token = genToken({username:user.name})
-            res.status(200).json({body:{token},errcode:200,message:"登录成功！"})
+            res.status(200).json({body:{token,username:user.name},errcode:200,message:"登录成功！"})
         }
         else 
             res.status(800).json({body:null,errcode:800,message:"账号或密码错误！"})
