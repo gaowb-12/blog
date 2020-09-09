@@ -13,6 +13,7 @@ export default function layout(props:React.Props<any>) {
             setUser(JSON.parse(localStorage.getItem("user")||"{}"));
         }
     });
+    
     return (
         <Layout>
             <Header style={{ position: 'fixed', zIndex: 1, width: '100%', background:"#fff",boxShadow:"rgb(235 234 234) 0px 0px 3px 2px" }}>
@@ -36,7 +37,7 @@ export default function layout(props:React.Props<any>) {
                     left: 0,
                 }}
                 >
-                <Menu theme="light" mode="inline" defaultSelectedKeys={['4']}>
+                <Menu theme="light" mode="inline" defaultSelectedKeys={['1']}>
                     <Menu.Item key="1" icon={<UserOutlined />}>
                         所有文章
                     </Menu.Item>
@@ -76,11 +77,12 @@ export default function layout(props:React.Props<any>) {
                 </Menu>
                 </Sider>
                 <Layout style={{ marginLeft: 200,height: "100vh" }}>
-                <Content style={{ padding: '0 50px',paddingTop: 64, overflowY: 'auto' }}>
-                    <div className="site-layout-background" style={{ background:"#fff",marginTop:"20px",minHeight:"60%", textAlign: 'center' }}>
-                        {props.children}
-                    </div>
-                </Content>
+                    <Content style={{ padding: '0 30px',paddingTop: 64, overflowY: 'auto' }}>
+                        {((props as any).pathname)}
+                        <div className="site-layout-background" style={{ background:"#fff",marginTop:"20px",minHeight:"60%", padding: '20px' }}>
+                            {props.children}
+                        </div>
+                    </Content>
                 </Layout>
             </Layout>
         </Layout>
