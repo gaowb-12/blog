@@ -6,43 +6,55 @@ import MainPage from "../../src/components/MainPage"
 const data = [
   {
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
+    title: '浏览器缓存机制',
+    status: 32,
+    catalogue: ['nice', 'developer'],
     tags: ['nice', 'developer'],
+    readnum: 100,
+    publishTime: "2020-01-09 10:10:10"
   },
   {
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
+    title: 'Jim Green',
+    status: 42,
+    catalogue: ['loser'],
     tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
+    readnum: 120,
+    publishTime: "2020-01-02 20:20:20"
   },
 ];
 
 const columns = [
   {
     title: '标题',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'title',
+    key: 'title',
     render: (text:any) => <a>{text}</a>,
   },
   {
     title: '状态',
-    dataIndex: 'age',
-    key: 'age',
+    dataIndex: 'status',
+    key: 'status',
   },
   {
     title: '分类',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'catalogue',
+    key: 'catalogue',
+    render: (tags:any) => (
+      <>
+        {tags.map((tag:any) => {
+          let color = tag.length > 5 ? 'geekblue' : 'green';
+          if (tag === 'loser') {
+            color = 'volcano';
+          }
+          return (
+            <Tag color={color} key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </>
+    ),
   },
   {
     title: '标签',
@@ -66,27 +78,28 @@ const columns = [
   },
   {
     title: '阅读量',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'readnum',
+    key: 'readnum',
   },
   {
     title: '发布时间',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'publishTime',
+    key: 'publishTime',
   },
   {
     title: '操作',
     key: 'action',
     render: (text:any, record:any) => (
       <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
+        <a>查看访问</a>
+        <a>编辑</a>
+        <a>删除</a>
       </Space>
     ),
   },
 ];
 
-export default function Article() {
+function Article() {
   const [form] = Form.useForm();
   
   let onFinish = (values:string) => {
@@ -121,3 +134,20 @@ export default function Article() {
     </MainPage>
   )
 }
+
+export async function getStaticProps() {
+  // Call an external API endpoint to get posts.
+  // You can use any data fetching library
+  const res = await fetch('https://.../posts')
+  const posts = await res.json()
+
+  // By returning { props: posts }, the Blog component
+  // will receive `posts` as a prop at build time
+  return {
+    props: {
+      posts,
+    },
+  }
+}
+
+export default Article
