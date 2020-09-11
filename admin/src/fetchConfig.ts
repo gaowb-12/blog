@@ -10,7 +10,7 @@ let fetchProxyHandler = {
                     // 配置默认属性
                     headers: {
                         'content-type': 'application/x-www-form-urlencoded',
-                        'authorization': localStorage.getItem("token")
+                        'authorization': 'Bearer ' + localStorage.getItem("token")||""
                     },
                 }, 
                 options
@@ -20,7 +20,6 @@ let fetchProxyHandler = {
 
         return  Reflect.apply(target, object,args)
                 .then((data:any)=>{
-                    console.log(data)
                     // 统一处理成json
                     return data.json()
                 })

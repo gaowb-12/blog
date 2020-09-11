@@ -4,27 +4,6 @@ import fetch from "isomorphic-unfetch";
 import http_article from "../../src/api/article";
 import MainPage from "../../src/components/MainPage"
 
-const data = [
-  {
-    key: '1',
-    title: '浏览器缓存机制',
-    status: 32,
-    catalogue: ['nice', 'developer'],
-    tags: ['nice', 'developer'],
-    readnum: 100,
-    publishTime: "2020-01-09 10:10:10"
-  },
-  {
-    key: '2',
-    title: 'Jim Green',
-    status: 42,
-    catalogue: ['loser'],
-    tags: ['loser'],
-    readnum: 120,
-    publishTime: "2020-01-02 20:20:20"
-  },
-];
-
 const columns = [
   {
     title: '标题',
@@ -102,13 +81,14 @@ const columns = [
 
 function Article() {
   const [form] = Form.useForm();
+  const [data,setData]:[Array<any>,Function] = useState([]);
   let flag = false;
   // 获取文章列表
   async function getArticleList(values:any){
     flag=true
     try {
       let data = await http_article.getArticleList({title:values.title,catalogue:values.catalogue,status:values.status})
-      console.log(data)
+      setData(data.result)
     } catch (error) {
       console.log(error)
     }

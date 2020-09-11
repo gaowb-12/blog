@@ -12,7 +12,7 @@ router.use((err:express.Errback, req:express.Request, res:express.Response, next
   console.log(req.headers.authorization)
   global.Logger.error(err)
   if (err.name === 'UnauthorizedError') {
-    res.status(401).send('无效的token,请重新登录');
+    res.status(401).json({body:{errmsg:'无效的token,请重新登录'},errcode:401,message:'无效的token,请重新登录'});
   }
   else{
     next()
