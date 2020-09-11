@@ -2,14 +2,15 @@ import { message } from 'antd';
 let fetchProxyHandler = {
     // 拦截 Proxy 实例作为函数调用的操作，比如proxy(...args)、proxy.call(object, ...args)、proxy.apply(...)。
     apply(target:any, object:any, args:any){
-        let options = args[1]||{};
+        let options:{[p:string]:any} = args[1]||{};
         if(options){
             options = Object.assign(
                 {},
                 {
                     // 配置默认属性
                     headers: {
-                        'content-type': 'application/x-www-form-urlencoded'
+                        'content-type': 'application/x-www-form-urlencoded',
+                        'authorization': localStorage.getItem("token")
                     },
                 }, 
                 options
@@ -19,6 +20,7 @@ let fetchProxyHandler = {
 
         return  Reflect.apply(target, object,args)
                 .then((data:any)=>{
+                    console.log(data)
                     // 统一处理成json
                     return data.json()
                 })

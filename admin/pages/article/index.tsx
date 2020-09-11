@@ -1,6 +1,7 @@
-import http_auth from "../../src/api/auth";
 import React, { useState } from 'react';
-import { Form, Input, Button, Select, Table, Tag, Space } from 'antd';
+import { Form, Input, Button, Select, Table, Tag, Space,message } from 'antd';
+import fetch from "isomorphic-unfetch";
+import http_article from "../../src/api/article";
 import MainPage from "../../src/components/MainPage"
 
 const data = [
@@ -101,8 +102,25 @@ const columns = [
 
 function Article() {
   const [form] = Form.useForm();
-  
+  let flag = false;
+  // 获取文章列表
+  async function getArticleList(values:any){
+    flag=true
+    try {
+      let data = await http_article.getArticleList({title:values.title,catalogue:values.catalogue,status:values.status})
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+    flag=false
+  }
+
   let onFinish = (values:string) => {
+    if(flag){
+      message.warning("操作太频繁，请稍后再试！")
+      return
+    }
+    getArticleList(values)
     console.log(values);
   };
   return (
@@ -135,19 +153,19 @@ function Article() {
   )
 }
 
-export async function getStaticProps() {
-  // Call an external API endpoint to get posts.
-  // You can use any data fetching library
-  const res = await fetch('https://.../posts')
-  const posts = await res.json()
+// export async function getStaticProps() {
+//   // Call an external API endpoint to get posts.
+//   // You can use any data fetching library
+//   const res = await fetch('https://.../posts')
+//   const posts = await res.json()
 
-  // By returning { props: posts }, the Blog component
-  // will receive `posts` as a prop at build time
-  return {
-    props: {
-      posts,
-    },
-  }
-}
+//   // By returning { props: posts }, the Blog component
+//   // will receive `posts` as a prop at build time
+//   return {
+//     props: {
+//       posts,
+//     },
+//   }
+// }
 
 export default Article
