@@ -18,8 +18,8 @@ const columns = [
   },
   {
     title: '分类',
-    dataIndex: 'catalogue',
-    key: 'catalogue',
+    dataIndex: 'catalogue_name',
+    key: 'catalogue_name',
     render: (tags:any) => (
       <>
         {tags.map((tag:any) => {
@@ -38,8 +38,8 @@ const columns = [
   },
   {
     title: '标签',
-    key: 'tags',
-    dataIndex: 'tags',
+    key: 'tag_name',
+    dataIndex: 'tag_name',
     render: (tags:any) => (
       <>
         {tags.map((tag:any) => {
@@ -58,13 +58,13 @@ const columns = [
   },
   {
     title: '阅读量',
-    dataIndex: 'readnum',
-    key: 'readnum',
+    dataIndex: 'read_num',
+    key: 'read_num',
   },
   {
     title: '发布时间',
-    dataIndex: 'publishTime',
-    key: 'publishTime',
+    dataIndex: 'publish_time',
+    key: 'publish_time',
   },
   {
     title: '操作',
@@ -81,14 +81,19 @@ const columns = [
 
 function Article() {
   const [form] = Form.useForm();
-  const [data,setData]:[Array<any>,Function] = useState([]);
+  const [dataList,setDataList]:[Array<any>,Function] = useState([]);
   let flag = false;
   // 获取文章列表
   async function getArticleList(values:any){
     flag=true
     try {
       let data = await http_article.getArticleList({title:values.title,catalogue:values.catalogue,status:values.status})
-      setData(data.result)
+      let d = data.result.map((item:any)=>{
+        item.key=item.id 
+        return item
+      })
+      console.log(d)
+      setDataList(d)
     } catch (error) {
       console.log(error)
     }
@@ -128,7 +133,7 @@ function Article() {
           <Button type="primary" htmlType="submit">搜索</Button>
         </Form.Item>
       </Form>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={dataList} />
     </MainPage>
   )
 }
